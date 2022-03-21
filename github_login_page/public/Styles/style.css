@@ -1,0 +1,166 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;1,100&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+/* Header section*/
+
+#Header {
+  height: 4rem;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+nav {
+  height: 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #24292f;
+}
+
+nav h1 {
+  color: white;
+}
+
+.leftList {
+  display: flex;
+  align-items: center;
+  margin-left: 120px;
+  list-style: none;
+}
+
+.rightList {
+  display: flex;
+  align-items: center;
+  margin-right: 150px;
+  list-style: none;
+}
+
+nav li {
+  display: inline;
+  margin: 0rem 0.5rem;
+}
+
+nav li select {
+  background-color: transparent;
+  color: white;
+  border-color: transparent;
+  border-radius: 0.2rem;
+}
+
+.Logo {
+  font-size: 22px;
+}
+
+.search {
+  height: 2rem;
+  width: 12rem;
+  background-color: #3d3e3f;
+}
+
+.search::placeholder {
+  color: gray;
+}
+
+/* Home section*/
+
+.HomeContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  height: 34.1rem;
+  background-color: #2e333a;
+}
+
+.firstBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 23rem;
+  margin-bottom: 20px;
+  font-size: 15.5px;
+}
+
+.homeTitle {
+  color: white;
+  font-size: 45.5px;
+}
+.homeText {
+  color: rgba(201, 201, 201, 0.911);
+}
+
+.secondBox {
+  display: flex;
+  flex-direction: column;
+  width: 20rem;
+  height: 30rem;
+  margin-right: 100px;
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 0.2rem;
+}
+.inputFromUser {
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+}
+
+.labels {
+  margin: 7.5px 0px 7.5px 20px;
+}
+
+.textBox {
+  margin-left: 20px;
+  height: 1.5rem;
+  padding-left: 10px;
+  width: 17rem;
+  border-radius: 0.1rem;
+  border: 1px solid gray;
+}
+
+.firstWarning {
+  margin: 20px;
+  font-size: 14px;
+}
+
+.signUpContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0px;
+}
+
+.signupButton {
+  border-color: transparent;
+  border-radius: 0.2rem;
+  width: 17rem;
+  height: 3rem;
+  color: white;
+  background-color: rgb(34, 202, 0);
+}
+
+.signupButton:hover {
+  cursor: pointer;
+  box-shadow: 1px 2px #888888;
+}
+
+.secondWarning {
+  margin: 10px;
+  font-size: 14px;
+}
