@@ -1,22 +1,29 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewTask } from "./redux/actions/Action.js";
+import { addNewTask, setDBAllTasks } from "./redux/actions/Action.js";
 import Task from "./components/Task";
 import MainMenu from "./components/MainMenu.js";
+import axios from "axios";
 
 const App = () => {
   let dispatch = useDispatch();
   let allTasks = useSelector((state) => state.allTasks);
-  let taskId = useSelector((state) => state.ID);
   const [taskName, setTaskName] = useState("");
-  const [tasksToShow, setTasksToShow] = useState(allTasks);
+  const [tasksToShow, setTasksToShow] = useState([]);
+
+  useEffect(async () => {
+    let res = await axios.get("http://localhost:3001/");
+    let dbAllTasks = res.data;
+    dispatch(setDBAllTasks(dbAllTasks));
+    setTasksToShow(dbAllTasks);
+  }, []);
 
   useEffect(() => {
     setTasksToShow(allTasks);
   }, [allTasks]);
 
   useEffect(() => {
-    console.log(allTasks);
+    console.log("allTasks", allTasks);
   }, [allTasks]);
 
   const changeTaskName = (e) => {
@@ -25,13 +32,13 @@ const App = () => {
 
   const addTaskKey = (event) => {
     if (event.keyCode === 13) {
-      dispatch(addNewTask({ id: taskId, name: taskName, complete: false }));
+      dispatch(addNewTask({ name: taskName, complete: false }));
       setTaskName("");
     }
   };
 
   const addTask = () => {
-    dispatch(addNewTask({ id: taskId, name: taskName, complete: false }));
+    dispatch(addNewTask({ name: taskName, complete: false }));
     setTaskName("");
   };
 

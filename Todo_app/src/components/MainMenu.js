@@ -77,7 +77,10 @@ const MainMenu = ({ setNewTasksToShow }) => {
                 </Typography>
               </MenuItem>
               <MenuItem>
-                <Typography textAlign="center" onClick={() => showAll()}>
+                <Typography
+                  textAlign="center"
+                  onClick={() => showAll(allTasks, setNewTasksToShow)}
+                >
                   Show All
                 </Typography>
               </MenuItem>
