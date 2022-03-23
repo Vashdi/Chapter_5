@@ -11,6 +11,7 @@ const App = () => {
   const allTasks = useSelector((state) => state.allTasks);
   const [taskName, setTaskName] = useState("");
   const [tasksToShow, setTasksToShow] = useState([]);
+  const doShowALLSelector = useSelector((state) => state.doShowALL);
 
   useEffect(async () => {
     const res = await axios.get(configService.todo_api);
@@ -20,8 +21,13 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    setTasksToShow(allTasks);
-  }, [allTasks]);
+    if (doShowALLSelector) {
+      setTasksToShow(allTasks);
+    } else {
+      let newerTasksToShow = allTasks.filter((task) => task.complete !== true);
+      setTasksToShow(newerTasksToShow);
+    }
+  }, [doShowALLSelector, allTasks]);
 
   const changeTaskName = (e) => {
     setTaskName(e.target.value);

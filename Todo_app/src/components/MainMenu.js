@@ -28,10 +28,6 @@ const MainMenu = ({ setNewTasksToShow }) => {
     setAnchorElNav(null);
   };
 
-  React.useEffect(() => {
-    console.log(doShowALL);
-  }, []);
-
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
