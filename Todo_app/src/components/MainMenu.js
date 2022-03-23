@@ -10,7 +10,7 @@ import Container from "@mui/material/Container";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import { showAll, hideAllDoneTasks } from "../utils/helpers";
+import { showAll, hideAllDoneTasks } from "../redux/actions/Action.js";
 import { deleteAllDoneTasks } from "../redux/actions/Action.js";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -18,6 +18,7 @@ const MainMenu = ({ setNewTasksToShow }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const dispatch = useDispatch();
   const allTasks = useSelector((state) => state.allTasks);
+  const doShowALL = useSelector((state) => state.doShowALL);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -26,6 +27,10 @@ const MainMenu = ({ setNewTasksToShow }) => {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
+
+  React.useEffect(() => {
+    console.log(doShowALL);
+  }, []);
 
   return (
     <AppBar position="static">
@@ -61,12 +66,25 @@ const MainMenu = ({ setNewTasksToShow }) => {
               }}
             >
               <MenuItem>
-                <Typography
-                  textAlign="center"
-                  onClick={() => hideAllDoneTasks(allTasks, setNewTasksToShow)}
-                >
-                  Hide All Done Tasks
-                </Typography>
+                {doShowALL ? (
+                  <Typography
+                    textAlign="center"
+                    onClick={() =>
+                      dispatch(hideAllDoneTasks(allTasks, setNewTasksToShow))
+                    }
+                  >
+                    Hide All Done Tasks
+                  </Typography>
+                ) : (
+                  <Typography
+                    textAlign="center"
+                    onClick={() =>
+                      dispatch(showAll(allTasks, setNewTasksToShow))
+                    }
+                  >
+                    Show All
+                  </Typography>
+                )}
               </MenuItem>
               <MenuItem>
                 <Typography
@@ -76,34 +94,31 @@ const MainMenu = ({ setNewTasksToShow }) => {
                   Delete All Done Tasks
                 </Typography>
               </MenuItem>
-              <MenuItem>
-                <Typography
-                  textAlign="center"
-                  onClick={() => showAll(allTasks, setNewTasksToShow)}
-                >
-                  Show All
-                </Typography>
-              </MenuItem>
             </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <Button
-              sx={{ my: 2, color: "white", display: "block" }}
-              onClick={() => hideAllDoneTasks(allTasks, setNewTasksToShow)}
-            >
-              Hide All Done Tasks
-            </Button>
+            {doShowALL ? (
+              <Button
+                sx={{ my: 2, color: "white", display: "block" }}
+                onClick={() =>
+                  dispatch(hideAllDoneTasks(allTasks, setNewTasksToShow))
+                }
+              >
+                Hide All Done Tasks
+              </Button>
+            ) : (
+              <Button
+                sx={{ my: 2, color: "white", display: "block" }}
+                onClick={() => dispatch(showAll(allTasks, setNewTasksToShow))}
+              >
+                Show All
+              </Button>
+            )}
             <Button
               sx={{ my: 2, color: "white", display: "block" }}
               onClick={() => dispatch(deleteAllDoneTasks(allTasks))}
             >
               Delete All Done Tasks
-            </Button>
-            <Button
-              sx={{ my: 2, color: "white", display: "block" }}
-              onClick={() => showAll(allTasks, setNewTasksToShow)}
-            >
-              Show All
             </Button>
           </Box>
 

@@ -6,12 +6,34 @@ import {
   DELETE_ALL_DONE_TASKS,
   SET_ALL_TASKS,
   SET_TASK_NAME,
+  TOGGLE_SHOW,
 } from "../types/types";
 import configService from "../../components/config.js";
 
 export const setDBAllTasks = (allDBTasks) => {
   return async (dispatch) => {
     dispatch({ type: SET_ALL_TASKS, payload: allDBTasks });
+  };
+};
+
+export const toggleShow = (doShowAll) => {
+  return async (dispatch) => {
+    dispatch({ type: TOGGLE_SHOW, payload: doShowAll });
+  };
+};
+
+export const hideAllDoneTasks = (allTasks, setNewTasksToShow) => {
+  return async (dispatch) => {
+    let newTasksToShow = allTasks.filter((task) => task.complete !== true);
+    dispatch(toggleShow(false));
+    setNewTasksToShow(newTasksToShow);
+  };
+};
+
+export const showAll = (allTasks, setNewTasksToShow) => {
+  return async (dispatch) => {
+    dispatch(toggleShow(true));
+    setNewTasksToShow(allTasks);
   };
 };
 
