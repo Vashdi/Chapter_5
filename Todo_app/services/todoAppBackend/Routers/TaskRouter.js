@@ -31,6 +31,7 @@ taskRouter.put("/updateComplete/:id", async (req, res) => {
 
 taskRouter.post("/tasks", async (req, res) => {
   const dataOfTask = req.body.task;
+  console.log(req.body);
   let task = await addNewTaskToDB(dataOfTask);
   res.send(task);
 });

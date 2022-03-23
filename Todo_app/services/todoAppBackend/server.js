@@ -7,6 +7,7 @@ dotenv.config();
 
 const express = require("express");
 const app = express();
+
 const taskRouter = require("./Routers/TaskRouter.js");
 const cors = require("cors");
 
@@ -27,3 +28,5 @@ app.use(unknownEndpoint);
 app.listen(process.env.PORT, () => {
   console.log(`Listening on port: ${process.env.PORT}`);
 });
+
+module.exports = app;

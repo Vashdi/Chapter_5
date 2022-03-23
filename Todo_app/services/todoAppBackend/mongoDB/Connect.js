@@ -1,6 +1,11 @@
 const mongooseConnection = () => {
   const mongoose = require("mongoose");
-  mongoose.connect(process.env.MONGODB_URL);
+  const MONGODB_URI =
+    process.env.NODE_ENV === "test"
+      ? process.env.TEST_MONGODB_URI
+      : process.env.MONGODB_URI;
+
+  mongoose.connect(MONGODB_URI);
 };
 
 module.exports = { mongooseConnection };
