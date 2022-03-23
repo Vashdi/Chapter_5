@@ -7,7 +7,6 @@ const {
   deleteByID,
 } = require("../mongoDB/DBFunctions/dbFunctions");
 const taskRouter = express.Router();
-const TaskModel = require("../mongoDB/TaskSchema");
 
 taskRouter.get("/", async (req, res) => {
   let tasks = await getAllTasks();

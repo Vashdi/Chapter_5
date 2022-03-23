@@ -7,6 +7,11 @@ import {
   SET_ALL_TASKS,
   SET_TASK_NAME,
 } from "../types/types";
+import {
+  addTask_api,
+  update_complete_api,
+  todo_api,
+} from "../../components/config.js";
 
 export const setDBAllTasks = (allDBTasks) => {
   return async (dispatch) => {
@@ -16,7 +21,7 @@ export const setDBAllTasks = (allDBTasks) => {
 
 export const addNewTask = (newTask) => {
   return async (dispatch) => {
-    let res = await axios.post("http://localhost:3001/tasks", {
+    let res = await axios.post(addTask_api, {
       task: newTask,
     });
     let newDBTask = res.data;
@@ -30,7 +35,7 @@ export const toggleComplete = (id, allTasks) => async (dispatch) => {
     let index = newAllTasks.findIndex((task) => task.id === id);
     newAllTasks[index].complete = !newAllTasks[index].complete;
     dispatch({ type: TOGGLE_COMPLETE, payload: newAllTasks });
-    await axios.put(`http://localhost:3001/updateComplete/${id}`, {
+    await axios.put(update_complete_api + id, {
       complete: newAllTasks[index].complete,
     });
   } catch (err) {
@@ -40,7 +45,7 @@ export const toggleComplete = (id, allTasks) => async (dispatch) => {
 
 export const deleteTheTask = (id, allTasks) => async (dispatch) => {
   let newAllTasks = allTasks.filter((task) => task.id !== id);
-  await axios.delete(`http://localhost:3001/${id}`);
+  await axios.delete(todo_api + id);
   dispatch({ type: DELETE_TASK, payload: newAllTasks });
 };
 
@@ -59,7 +64,7 @@ export const deleteAllDoneTasks = (allTasks) => {
     for (const task of allTasks) {
       if (task.complete) {
         try {
-          await axios.delete(`http://localhost:3001/${task.id}`);
+          await axios.delete(todo_api + task.id);
         } catch (error) {
           console.log(error);
         }

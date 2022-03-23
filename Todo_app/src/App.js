@@ -4,6 +4,7 @@ import { addNewTask, setDBAllTasks } from "./redux/actions/Action.js";
 import Task from "./components/Task";
 import MainMenu from "./components/MainMenu.js";
 import axios from "axios";
+import { todo_api } from "./components/config.js";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -12,7 +13,7 @@ const App = () => {
   const [tasksToShow, setTasksToShow] = useState([]);
 
   useEffect(async () => {
-    const res = await axios.get("http://localhost:3001/");
+    const res = await axios.get(todo_api);
     const dbAllTasks = res.data;
     dispatch(setDBAllTasks(dbAllTasks));
     setTasksToShow(dbAllTasks);
@@ -20,10 +21,6 @@ const App = () => {
 
   useEffect(() => {
     setTasksToShow(allTasks);
-  }, [allTasks]);
-
-  useEffect(() => {
-    console.log("allTasks", allTasks);
   }, [allTasks]);
 
   const changeTaskName = (e) => {
