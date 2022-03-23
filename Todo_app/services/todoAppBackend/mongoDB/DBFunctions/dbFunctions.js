@@ -1,4 +1,4 @@
-const TaskModel = require("../../mongoDB/TaskSchema.js");
+const TaskModel = require("../../mongoDB/Schemas/TaskSchema.js");
 
 const getAllTasks = async () => {
   let tasks = await TaskModel.find({});

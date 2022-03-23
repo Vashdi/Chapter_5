@@ -1,5 +1,6 @@
 const { mongooseConnection } = require("./mongoDB/Connect");
 const { requestLogger } = require("./Middlewares/RequestLogger");
+const { ActionHistory } = require("./Middlewares/ActionHistory");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -14,6 +15,7 @@ mongooseConnection();
 app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
+app.use(ActionHistory);
 app.use(taskRouter);
 
 const unknownEndpoint = (request, response) => {
