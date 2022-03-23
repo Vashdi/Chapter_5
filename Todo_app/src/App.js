@@ -41,7 +41,7 @@ const App = () => {
   };
 
   const addTask = () => {
-    dispatch(addNewTask({ name: taskName, complete: false }));
+    dispatch(addNewTask({ name: taskName }));
     setTaskName("");
   };
 

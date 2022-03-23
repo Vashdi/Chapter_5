@@ -20,7 +20,7 @@ const updateTaskComplete = async (id, taskCompleteChanged) => {
 const addNewTaskToDB = async (dataOfTask) => {
   const task = new TaskModel({
     name: dataOfTask.name,
-    complete: dataOfTask.complete,
+    complete: false,
   });
   await task.save();
   return task;
