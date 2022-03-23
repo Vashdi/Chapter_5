@@ -119,7 +119,7 @@ const MainMenu = ({ setNewTasksToShow }) => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <IconButton sx={{ p: 0 }}>
+            <IconButton disabled sx={{ p: 0 }}>
               <AssignmentIcon fontSize="medium" sx={{ color: "white" }} />
             </IconButton>
           </Box>
