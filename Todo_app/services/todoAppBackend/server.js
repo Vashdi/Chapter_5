@@ -1,4 +1,6 @@
 const { mongooseConnection } = require("./mongoDB/Connect");
+const { requestLogger } = require("./Middlewares/RequestLogger");
+
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -8,14 +10,6 @@ const taskRouter = require("./Routers/TaskRouter.js");
 const cors = require("cors");
 
 mongooseConnection();
-
-const requestLogger = (request, response, next) => {
-  console.log("Method:", request.method);
-  console.log("Path:  ", request.path);
-  console.log("Body:  ", request.body);
-  console.log("---");
-  next();
-};
 
 app.use(cors());
 app.use(express.json());

@@ -1,6 +1,6 @@
 const express = require("express");
 const { getAllTasks } = require("../mongoDB/DBFunctions/dbFunctions");
-var taskRouter = express.Router();
+const taskRouter = express.Router();
 const TaskModel = require("../mongoDB/TaskSchema");
 
 taskRouter.get("/", async (req, res) => {

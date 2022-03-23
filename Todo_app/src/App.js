@@ -6,14 +6,14 @@ import MainMenu from "./components/MainMenu.js";
 import axios from "axios";
 
 const App = () => {
-  let dispatch = useDispatch();
-  let allTasks = useSelector((state) => state.allTasks);
+  const dispatch = useDispatch();
+  const allTasks = useSelector((state) => state.allTasks);
   const [taskName, setTaskName] = useState("");
   const [tasksToShow, setTasksToShow] = useState([]);
 
   useEffect(async () => {
-    let res = await axios.get("http://localhost:3001/");
-    let dbAllTasks = res.data;
+    const res = await axios.get("http://localhost:3001/");
+    const dbAllTasks = res.data;
     dispatch(setDBAllTasks(dbAllTasks));
     setTasksToShow(dbAllTasks);
   }, []);
