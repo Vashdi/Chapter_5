@@ -1,5 +1,11 @@
 const express = require("express");
-const { getAllTasks } = require("../mongoDB/DBFunctions/dbFunctions");
+const {
+  getAllTasks,
+  updateTaskName,
+  updateTaskComplete,
+  addNewTaskToDB,
+  deleteByID,
+} = require("../mongoDB/DBFunctions/dbFunctions");
 const taskRouter = express.Router();
 const TaskModel = require("../mongoDB/TaskSchema");
 
@@ -10,39 +16,34 @@ taskRouter.get("/", async (req, res) => {
 
 taskRouter.put("/updateName/:id", async (req, res) => {
   const body = req.body;
-  const oldTask = await TaskModel.findOne({ _id: req.params.id });
-  oldTask.name = body.name;
-  await oldTask.save();
+  const id = req.params.id;
+  const newTaskName = body.name;
+  await updateTaskName(id, newTaskName);
   res.sendStatus(200);
 });
 
 taskRouter.put("/updateComplete/:id", async (req, res) => {
   const body = req.body;
-  const oldTask = await TaskModel.findOne({ _id: req.params.id });
-  oldTask.complete = body.complete;
-  await oldTask.save();
+  const id = req.params.id;
+  const taskCompleteChanged = body.complete;
+  await updateTaskComplete(id, taskCompleteChanged);
   res.sendStatus(200);
 });
 
-taskRouter.post("/tasks", (req, res) => {
-  const data = req.body.task;
-  const task = new TaskModel({
-    name: data.name,
-    complete: data.complete,
-  });
-
-  task.save().then((result) => {
-    console.log("task saved!");
-  });
+taskRouter.post("/tasks", async (req, res) => {
+  const dataOfTask = req.body.task;
+  let task = await addNewTaskToDB(dataOfTask);
   res.send(task);
 });
 
-taskRouter.delete("/:id", (req, res) => {
-  TaskModel.findByIdAndRemove(req.params.id)
-    .then((result) => {
-      res.status(204).end();
-    })
-    .catch((error) => console.log(error));
+taskRouter.delete("/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    await deleteByID(id);
+    res.sendStatus(204);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 module.exports = taskRouter;
