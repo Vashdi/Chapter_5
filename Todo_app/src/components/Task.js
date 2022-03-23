@@ -8,7 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useState } from "react";
 import axios from "axios";
-import { update_api } from "./config";
+import ConfigService from "./config";
 
 const Task = ({ task }) => {
   const allTasks = useSelector((state) => state.allTasks);
@@ -36,7 +36,7 @@ const Task = ({ task }) => {
     if (event.keyCode === 13) {
       let id = task.id;
       setIsEdit(!isEdit);
-      await axios.put(update_api + id, {
+      await axios.put(ConfigService.update_api + id, {
         name: newTaskName,
       });
       dispatch(actionSetTaskName(allTasks, id, newTaskName));
