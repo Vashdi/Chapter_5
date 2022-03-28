@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SET_TASK_NAME, TOGGLE_SHOW } from "../types/types";
+import { TOGGLE_SHOW } from "../types/types";
 import configService from "../../components/config.js";
 
 export const toggleShow = (doShowAll) => {

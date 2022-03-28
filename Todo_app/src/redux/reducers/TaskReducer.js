@@ -8,11 +8,6 @@ const initialState = {
 
 const TaskReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.SET_TASK_NAME:
-      return {
-        ...state,
-        allTasks: action.payload,
-      };
     case Types.TOGGLE_SHOW:
       return {
         ...state,
