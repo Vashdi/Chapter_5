@@ -1,34 +1,15 @@
-import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addNewTask, setDBAllTasks } from "./redux/actions/Action.js";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addNewTask } from "./redux/actions/Action.js";
 import Task from "./components/Task";
 import MainMenu from "./components/MainMenu.js";
-import axios from "axios";
-import configService from "./components/config.js";
+import useFetch from "./components/useFetch.js";
 
 const App = () => {
   const dispatch = useDispatch();
-  const selectorAllTasks = useSelector((state) => state.allTasks);
-  const allTasks = selectorAllTasks;
   const [taskName, setTaskName] = useState("");
-  const [tasksToShow, setTasksToShow] = useState([]);
-  const doShowALLSelector = useSelector((state) => state.doShowALL);
-
-  useEffect(async () => {
-    const res = await axios.get(configService.todo_api);
-    const dbAllTasks = res.data;
-    dispatch(setDBAllTasks(dbAllTasks));
-    setTasksToShow(dbAllTasks);
-  }, [selectorAllTasks]);
-
-  useEffect(() => {
-    if (doShowALLSelector) {
-      setTasksToShow(allTasks);
-    } else {
-      let newerTasksToShow = allTasks.filter((task) => task.complete !== true);
-      setTasksToShow(newerTasksToShow);
-    }
-  }, [doShowALLSelector, selectorAllTasks]);
+  const [tasksToShow, getAllTasks, changeTasksToShow, hideAllDoneTasks] =
+    useFetch();
 
   const changeTaskName = (e) => {
     setTaskName(e.target.value);
@@ -36,13 +17,13 @@ const App = () => {
 
   const addTaskKey = (event) => {
     if (event.keyCode === 13) {
-      dispatch(addNewTask({ name: taskName, complete: false }));
+      dispatch(addNewTask({ name: taskName, complete: false }, getAllTasks));
       setTaskName("");
     }
   };
 
   const addTask = () => {
-    dispatch(addNewTask({ name: taskName }));
+    dispatch(addNewTask({ name: taskName }, getAllTasks));
     setTaskName("");
   };
 
@@ -56,7 +37,9 @@ const App = () => {
       }}
     >
       <MainMenu
-        setNewTasksToShow={(newTasksToShow) => setTasksToShow(newTasksToShow)}
+        setNewTasksToShow={changeTasksToShow}
+        hideAllDoneTasks={hideAllDoneTasks}
+        getAllTasks={getAllTasks}
       />
       <h1>My To Do List</h1>
       <div style={{ textAlign: "center" }}>
@@ -78,7 +61,7 @@ const App = () => {
         </div>
         <div>
           {tasksToShow.map((task, index) => {
-            return <Task key={index} task={task} />;
+            return <Task key={index} task={task} getAllTasks={getAllTasks} />;
           })}
         </div>
       </div>

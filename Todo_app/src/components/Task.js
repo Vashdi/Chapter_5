@@ -1,27 +1,23 @@
-import { useDispatch, useSelector } from "react-redux";
-import {
-  actionSetTaskName,
-  deleteTheTask,
-  toggleComplete,
-} from "../redux/actions/Action";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useState } from "react";
 import axios from "axios";
 import ConfigService from "./config";
 
-const Task = ({ task }) => {
-  const allTasks = useSelector((state) => state.allTasks);
+const Task = ({ task, getAllTasks }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [newTaskName, setNewTaskName] = useState(task.name);
-  let dispatch = useDispatch();
 
-  const handleCheck = () => {
-    dispatch(toggleComplete(task.id, allTasks));
+  const handleCheck = async () => {
+    await axios.put(ConfigService.update_complete_api + task.id, {
+      complete: !task.complete,
+    });
+    await getAllTasks();
   };
 
-  const deleteTask = () => {
-    dispatch(deleteTheTask(task.id, allTasks));
+  const deleteTask = async () => {
+    await axios.delete(ConfigService.todo_api + task.id);
+    await getAllTasks();
   };
 
   const handleEditClick = () => {
@@ -34,17 +30,12 @@ const Task = ({ task }) => {
 
   const handleSendTaskNameChangeClick = async (event) => {
     if (event.keyCode === 13) {
-      let id = task.id;
       setIsEdit(!isEdit);
-      await axios.put(ConfigService.update_api + id, {
+      await axios.put(ConfigService.update_api + task.id, {
         name: newTaskName,
       });
-      dispatch(actionSetTaskName(allTasks, id, newTaskName));
     }
-  };
-
-  const handleSendTaskNameChangeBlur = (event) => {
-    console.log("HEY");
+    await getAllTasks();
   };
 
   return (
@@ -55,7 +46,6 @@ const Task = ({ task }) => {
           value={newTaskName}
           onChange={handleChangeTaskName}
           onKeyDown={handleSendTaskNameChangeClick}
-          onBlur={handleSendTaskNameChangeBlur}
         />
       ) : (
         task.name

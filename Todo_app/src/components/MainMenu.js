@@ -10,11 +10,15 @@ import Container from "@mui/material/Container";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import { showAll, hideAllDoneTasks } from "../redux/actions/Action.js";
+import {
+  showAll,
+  hideAllDoneTasks,
+  hideAllDoneTasksAction,
+} from "../redux/actions/Action.js";
 import { deleteAllDoneTasks } from "../redux/actions/Action.js";
 import { useDispatch, useSelector } from "react-redux";
 
-const MainMenu = ({ setNewTasksToShow }) => {
+const MainMenu = ({ setNewTasksToShow, hideAllDoneTasks, getAllTasks }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const dispatch = useDispatch();
   const allTasks = useSelector((state) => state.allTasks);
@@ -66,7 +70,7 @@ const MainMenu = ({ setNewTasksToShow }) => {
                   <Typography
                     textAlign="center"
                     onClick={() =>
-                      dispatch(hideAllDoneTasks(allTasks, setNewTasksToShow))
+                      dispatch(hideAllDoneTasksAction(hideAllDoneTasks))
                     }
                   >
                     Hide All Done Tasks
@@ -74,9 +78,7 @@ const MainMenu = ({ setNewTasksToShow }) => {
                 ) : (
                   <Typography
                     textAlign="center"
-                    onClick={() =>
-                      dispatch(showAll(allTasks, setNewTasksToShow))
-                    }
+                    onClick={() => dispatch(showAll(getAllTasks))}
                   >
                     Show All
                   </Typography>
@@ -85,7 +87,7 @@ const MainMenu = ({ setNewTasksToShow }) => {
               <MenuItem>
                 <Typography
                   textAlign="center"
-                  onClick={() => dispatch(deleteAllDoneTasks(allTasks))}
+                  onClick={() => dispatch(deleteAllDoneTasks(getAllTasks))}
                 >
                   Delete All Done Tasks
                 </Typography>
@@ -97,7 +99,7 @@ const MainMenu = ({ setNewTasksToShow }) => {
               <Button
                 sx={{ my: 2, color: "white", display: "block" }}
                 onClick={() =>
-                  dispatch(hideAllDoneTasks(allTasks, setNewTasksToShow))
+                  dispatch(hideAllDoneTasksAction(hideAllDoneTasks))
                 }
               >
                 Hide All Done Tasks
@@ -105,14 +107,14 @@ const MainMenu = ({ setNewTasksToShow }) => {
             ) : (
               <Button
                 sx={{ my: 2, color: "white", display: "block" }}
-                onClick={() => dispatch(showAll(allTasks, setNewTasksToShow))}
+                onClick={() => dispatch(showAll(getAllTasks))}
               >
                 Show All
               </Button>
             )}
             <Button
               sx={{ my: 2, color: "white", display: "block" }}
-              onClick={() => dispatch(deleteAllDoneTasks(allTasks))}
+              onClick={() => dispatch(deleteAllDoneTasks(getAllTasks))}
             >
               Delete All Done Tasks
             </Button>
