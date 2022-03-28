@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewTask, setDBAllTasks } from "./redux/actions/Action.js";
 import Task from "./components/Task";
@@ -8,7 +8,8 @@ import configService from "./components/config.js";
 
 const App = () => {
   const dispatch = useDispatch();
-  const allTasks = useSelector((state) => state.allTasks);
+  const selectorAllTasks = useSelector((state) => state.allTasks);
+  const allTasks = selectorAllTasks;
   const [taskName, setTaskName] = useState("");
   const [tasksToShow, setTasksToShow] = useState([]);
   const doShowALLSelector = useSelector((state) => state.doShowALL);
@@ -18,7 +19,7 @@ const App = () => {
     const dbAllTasks = res.data;
     dispatch(setDBAllTasks(dbAllTasks));
     setTasksToShow(dbAllTasks);
-  }, []);
+  }, [selectorAllTasks]);
 
   useEffect(() => {
     if (doShowALLSelector) {
@@ -27,7 +28,7 @@ const App = () => {
       let newerTasksToShow = allTasks.filter((task) => task.complete !== true);
       setTasksToShow(newerTasksToShow);
     }
-  }, [doShowALLSelector, allTasks]);
+  }, [doShowALLSelector, selectorAllTasks]);
 
   const changeTaskName = (e) => {
     setTaskName(e.target.value);
