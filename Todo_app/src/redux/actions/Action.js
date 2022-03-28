@@ -23,7 +23,7 @@ export const showAll = (getAllTasks) => {
 };
 
 export const addNewTask = (newTask, getAllTasks) => {
-  return async (dispatch) => {
+  return async () => {
     let res = await axios.post(configService.addTask_api, {
       task: newTask,
     });
@@ -31,7 +31,7 @@ export const addNewTask = (newTask, getAllTasks) => {
   };
 };
 
-export const toggleComplete = (id, complete) => async (dispatch) => {
+export const toggleComplete = (id, complete) => async () => {
   try {
     await axios.put(configService.update_complete_api + id, {
       complete: !complete,
@@ -41,21 +41,13 @@ export const toggleComplete = (id, complete) => async (dispatch) => {
   }
 };
 
-export const deleteTheTask = (id, getAllTasks) => async (dispatch) => {
+export const deleteTheTask = (id, getAllTasks) => async () => {
   await axios.delete(configService.todo_api + id);
   await getAllTasks();
 };
 
-export const actionSetTaskName =
-  (allTasks, id, newTaskName) => async (dispatch) => {
-    let changeNewTasks = [...allTasks];
-    let index = changeNewTasks.findIndex((oldTask) => oldTask.id === id);
-    changeNewTasks[index].name = newTaskName;
-    dispatch({ type: SET_TASK_NAME, payload: changeNewTasks });
-  };
-
 export const deleteAllDoneTasks = (getAllTasks) => {
-  return async (dispatch) => {
+  return async () => {
     const allTasks = await getAllTasks();
     for (const task of allTasks) {
       if (task.complete) {

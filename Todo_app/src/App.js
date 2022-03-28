@@ -36,11 +36,7 @@ const App = () => {
         flexDirection: "column",
       }}
     >
-      <MainMenu
-        setNewTasksToShow={changeTasksToShow}
-        hideAllDoneTasks={hideAllDoneTasks}
-        getAllTasks={getAllTasks}
-      />
+      <MainMenu hideAllDoneTasks={hideAllDoneTasks} getAllTasks={getAllTasks} />
       <h1>My To Do List</h1>
       <div style={{ textAlign: "center" }}>
         <div>

@@ -18,10 +18,9 @@ import {
 import { deleteAllDoneTasks } from "../redux/actions/Action.js";
 import { useDispatch, useSelector } from "react-redux";
 
-const MainMenu = ({ setNewTasksToShow, hideAllDoneTasks, getAllTasks }) => {
+const MainMenu = ({ hideAllDoneTasks, getAllTasks }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const dispatch = useDispatch();
-  const allTasks = useSelector((state) => state.allTasks);
   const doShowALL = useSelector((state) => state.doShowALL);
 
   const handleOpenNavMenu = (event) => {
