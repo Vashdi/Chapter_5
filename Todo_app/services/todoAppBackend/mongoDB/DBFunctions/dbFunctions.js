@@ -8,7 +8,8 @@ const getAllTasks = async () => {
 const updateTaskName = async (id, newTaskName) => {
   const oldTask = await TaskModel.findOne({ _id: id });
   oldTask.name = newTaskName;
-  await oldTask.save();
+  let newTask = await oldTask.save();
+  return newTask;
 };
 
 const updateTaskComplete = async (id, taskCompleteChanged) => {

@@ -1,29 +1,47 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addNewTask } from "./redux/actions/Action.js";
 import Task from "./components/Task";
 import MainMenu from "./components/MainMenu.js";
-import useFetch from "./components/useFetch.js";
+import useSWR from "swr";
+import axios from "axios";
+import configService from "./components/config.js";
+
+const fetcher = async (url) => {
+  return await axios.get(url).then((res) => res.data);
+};
 
 const App = () => {
   const dispatch = useDispatch();
   const [taskName, setTaskName] = useState("");
-  const [tasksToShow, getAllTasks, changeTasksToShow, hideAllDoneTasks] =
-    useFetch();
+  const doShowALL = useSelector((state) => state.doShowALL);
+  const doSortAZ = useSelector((state) => state.doSortAZ);
 
+  const optionAxios = `doShowAll=${doShowALL}&doSortAZ=${doSortAZ}`;
+
+  const {
+    data: tasksToShow,
+    error,
+    mutate,
+  } = useSWR(configService.todo_api + `?${optionAxios}`, fetcher);
+
+  console.log(optionAxios);
   const changeTaskName = (e) => {
     setTaskName(e.target.value);
   };
 
   const addTaskKey = (event) => {
     if (event.keyCode === 13) {
-      dispatch(addNewTask({ name: taskName, complete: false }, getAllTasks));
+      dispatch(
+        addNewTask({ name: taskName, complete: false }, tasksToShow, mutate)
+      );
       setTaskName("");
     }
   };
 
   const addTask = () => {
-    dispatch(addNewTask({ name: taskName }, getAllTasks));
+    const url = configService.todo_api + `?doShowAll=${doShowALL}`;
+    dispatch(addNewTask({ name: taskName }, url, mutate));
     setTaskName("");
   };
 
@@ -36,7 +54,7 @@ const App = () => {
         flexDirection: "column",
       }}
     >
-      <MainMenu hideAllDoneTasks={hideAllDoneTasks} getAllTasks={getAllTasks} />
+      <MainMenu tasksToShow={tasksToShow} mutate={mutate} />
       <h1>My To Do List</h1>
       <div style={{ textAlign: "center" }}>
         <div>
@@ -56,9 +74,17 @@ const App = () => {
           />
         </div>
         <div>
-          {tasksToShow.map((task, index) => {
-            return <Task key={index} task={task} getAllTasks={getAllTasks} />;
-          })}
+          {tasksToShow &&
+            tasksToShow.map((task, index) => {
+              return (
+                <Task
+                  key={index}
+                  task={task}
+                  tasksToShow={tasksToShow}
+                  mutate={mutate}
+                />
+              );
+            })}
         </div>
       </div>
     </div>

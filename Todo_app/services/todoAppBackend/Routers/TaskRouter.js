@@ -9,7 +9,17 @@ const {
 const taskRouter = express.Router();
 
 taskRouter.get("/", async (req, res) => {
+  const doShowAll = req.query.doShowAll === "true";
+  const doSortAZ = req.query.doSortAZ === "true";
   let tasks = await getAllTasks();
+  if (!doShowAll) {
+    tasks = tasks.filter((task) => task.complete !== true);
+  }
+  if (doSortAZ) {
+    tasks.sort(function (a, b) {
+      return a.name.localeCompare(b.name);
+    });
+  }
   res.json(tasks);
 });
 
@@ -17,8 +27,8 @@ taskRouter.put("/updateName/:id", async (req, res) => {
   const body = req.body;
   const id = req.params.id;
   const newTaskName = body.name;
-  await updateTaskName(id, newTaskName);
-  res.sendStatus(200);
+  let data = await updateTaskName(id, newTaskName);
+  res.send(data);
 });
 
 taskRouter.put("/updateComplete/:id", async (req, res) => {

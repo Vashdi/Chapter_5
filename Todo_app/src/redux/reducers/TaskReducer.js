@@ -2,8 +2,8 @@ import * as Types from "../types/types";
 
 const initialState = {
   ID: 0,
-  allTasks: [],
   doShowALL: true,
+  doSortAZ: false,
 };
 
 const TaskReducer = (state = initialState, action) => {
@@ -12,6 +12,11 @@ const TaskReducer = (state = initialState, action) => {
       return {
         ...state,
         doShowALL: action.payload,
+      };
+    case Types.SORT_AZ:
+      return {
+        ...state,
+        doSortAZ: action.payload,
       };
     default:
       return state;

@@ -2,22 +2,57 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useState } from "react";
 import axios from "axios";
-import ConfigService from "./config";
+import configService from "./config";
+import { useSelector } from "react-redux";
+import produce from "immer";
 
-const Task = ({ task, getAllTasks }) => {
+const Task = ({ task, tasksToShow, mutate }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [newTaskName, setNewTaskName] = useState(task.name);
+  const doShowALL = useSelector((state) => state.doShowALL);
 
-  const handleCheck = async () => {
-    await axios.put(ConfigService.update_complete_api + task.id, {
-      complete: !task.complete,
-    });
-    await getAllTasks();
+  const updateFn = async (newTasksToShow) => {
+    await axios.delete(configService.todo_api + task.id);
+    return newTasksToShow;
   };
 
-  const deleteTask = async () => {
-    await axios.delete(ConfigService.todo_api + task.id);
-    await getAllTasks();
+  const updateName = async (filteredTodos) => {
+    const resUpdatedTask = await axios.put(configService.update_api + task.id, {
+      name: newTaskName,
+    });
+    return filteredTodos;
+  };
+
+  const updateCheck = async (newTasks) => {
+    const res = await axios.put(configService.update_complete_api + task.id, {
+      complete: !task.complete,
+    });
+    return newTasks;
+  };
+
+  const handleCheck = async () => {
+    const newTasksToShow = produce(tasksToShow, (draftState) => {
+      const index = tasksToShow.findIndex((oldTask) => oldTask.id === task.id);
+      draftState[index].complete = !tasksToShow[index].complete;
+    });
+    const options = {
+      optimisticData: newTasksToShow,
+      rollbackOnError: true,
+    };
+    mutate(updateCheck(newTasksToShow), options);
+  };
+
+  const deleteTask = async (tasksToShow) => {
+    const newTasksToShow = tasksToShow.filter(
+      (taskToCheck) => taskToCheck.id !== task.id
+    );
+
+    const options = {
+      optimisticData: newTasksToShow,
+      rollbackOnError: true,
+    };
+
+    mutate(updateFn(newTasksToShow), options);
   };
 
   const handleEditClick = () => {
@@ -31,11 +66,19 @@ const Task = ({ task, getAllTasks }) => {
   const handleSendTaskNameChangeClick = async (event) => {
     if (event.keyCode === 13) {
       setIsEdit(!isEdit);
-      await axios.put(ConfigService.update_api + task.id, {
-        name: newTaskName,
+      const newTasksToShow = produce(tasksToShow, (draftState) => {
+        const index = tasksToShow.findIndex(
+          (oldTask) => oldTask.id === task.id
+        );
+        draftState[index].name = newTaskName;
       });
+
+      const options = {
+        optimisticData: newTasksToShow,
+        rollbackOnError: true,
+      };
+      mutate(updateName(newTasksToShow), options);
     }
-    await getAllTasks();
   };
 
   return (
@@ -65,7 +108,7 @@ const Task = ({ task, getAllTasks }) => {
         onClick={handleEditClick}
       />
       <button
-        onClick={deleteTask}
+        onClick={() => deleteTask(tasksToShow)}
         style={{
           background: "transparent",
           border: "0",

@@ -1,6 +1,7 @@
 import axios from "axios";
-import { TOGGLE_SHOW } from "../types/types";
+import { SORT_AZ, TOGGLE_SHOW } from "../types/types";
 import configService from "../../components/config.js";
+import update from "immutability-helper";
 
 export const toggleShow = (doShowAll) => {
   return async (dispatch) => {
@@ -8,56 +9,70 @@ export const toggleShow = (doShowAll) => {
   };
 };
 
-export const hideAllDoneTasksAction = (hideAllDoneTasks) => {
+export const toggleSortAZ = (doSortAZ) => {
   return async (dispatch) => {
-    hideAllDoneTasks();
+    dispatch({ type: SORT_AZ, payload: !doSortAZ });
+  };
+};
+
+export const hideAllDoneTasksAction = () => {
+  return async (dispatch) => {
     dispatch(toggleShow(false));
   };
 };
 
-export const showAll = (getAllTasks) => {
+export const showAll = () => {
   return async (dispatch) => {
-    getAllTasks();
     dispatch(toggleShow(true));
   };
 };
 
-export const addNewTask = (newTask, getAllTasks) => {
+const handleAdd = async (newTasksToShow, newTask) => {
+  let res = await axios.post(configService.addTask_api, {
+    task: newTask,
+  });
+  return newTasksToShow;
+};
+
+const handleDeleteAllDoneTasks = async (allTasks, newTasksToShow) => {
+  for (const task of allTasks) {
+    if (task.complete) {
+      try {
+        await axios.delete(configService.todo_api + task.id);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+  return newTasksToShow;
+};
+
+export const addNewTask = (newTask, tasksToShow, mutate) => {
   return async () => {
-    let res = await axios.post(configService.addTask_api, {
-      task: newTask,
-    });
-    await getAllTasks();
+    const newTasksToShow = update(tasksToShow, { $push: [newTask] });
+
+    const options = {
+      optimisticData: newTasksToShow,
+      rollbackOnError: true,
+    };
+
+    mutate(handleAdd(newTasksToShow, newTask), options);
   };
 };
 
-export const toggleComplete = (id, complete) => async () => {
-  try {
-    await axios.put(configService.update_complete_api + id, {
-      complete: !complete,
-    });
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-export const deleteTheTask = (id, getAllTasks) => async () => {
+export const deleteTheTask = (id) => async () => {
   await axios.delete(configService.todo_api + id);
-  await getAllTasks();
 };
 
-export const deleteAllDoneTasks = (getAllTasks) => {
+export const deleteAllDoneTasks = (allTasks, mutate) => {
   return async () => {
-    const allTasks = await getAllTasks();
-    for (const task of allTasks) {
-      if (task.complete) {
-        try {
-          await axios.delete(configService.todo_api + task.id);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    }
-    await getAllTasks();
+    let newerAllTasks = allTasks.filter((task) => task.complete !== true);
+
+    const options = {
+      optimisticData: newerAllTasks,
+      rollbackOnError: true,
+    };
+
+    mutate(handleDeleteAllDoneTasks(allTasks, newerAllTasks), options);
   };
 };

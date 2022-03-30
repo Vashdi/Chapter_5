@@ -12,16 +12,17 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import {
   showAll,
-  hideAllDoneTasks,
   hideAllDoneTasksAction,
+  toggleSortAZ,
 } from "../redux/actions/Action.js";
 import { deleteAllDoneTasks } from "../redux/actions/Action.js";
 import { useDispatch, useSelector } from "react-redux";
 
-const MainMenu = ({ hideAllDoneTasks, getAllTasks }) => {
+const MainMenu = ({ tasksToShow, mutate }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const dispatch = useDispatch();
   const doShowALL = useSelector((state) => state.doShowALL);
+  const doSortAZ = useSelector((state) => state.doSortAZ);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -68,16 +69,14 @@ const MainMenu = ({ hideAllDoneTasks, getAllTasks }) => {
                 {doShowALL ? (
                   <Typography
                     textAlign="center"
-                    onClick={() =>
-                      dispatch(hideAllDoneTasksAction(hideAllDoneTasks))
-                    }
+                    onClick={() => dispatch(hideAllDoneTasksAction())}
                   >
                     Hide All Done Tasks
                   </Typography>
                 ) : (
                   <Typography
                     textAlign="center"
-                    onClick={() => dispatch(showAll(getAllTasks))}
+                    onClick={() => dispatch(showAll())}
                   >
                     Show All
                   </Typography>
@@ -86,34 +85,43 @@ const MainMenu = ({ hideAllDoneTasks, getAllTasks }) => {
               <MenuItem>
                 <Typography
                   textAlign="center"
-                  onClick={() => dispatch(deleteAllDoneTasks(getAllTasks))}
+                  onClick={() =>
+                    dispatch(deleteAllDoneTasks(tasksToShow, mutate))
+                  }
                 >
                   Delete All Done Tasks
                 </Typography>
               </MenuItem>
+              <MenuItem>
+                <Typography
+                  textAlign="center"
+                  onClick={() => dispatch(toggleSortAZ(doSortAZ))}
+                >
+                  {doSortAZ ? "stop sort" : "sort AZ"}
+                </Typography>
+              </MenuItem>
             </Menu>
+            {console.log(doSortAZ)}
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {doShowALL ? (
               <Button
                 sx={{ my: 2, color: "white", display: "block" }}
-                onClick={() =>
-                  dispatch(hideAllDoneTasksAction(hideAllDoneTasks))
-                }
+                onClick={() => dispatch(hideAllDoneTasksAction())}
               >
                 Hide All Done Tasks
               </Button>
             ) : (
               <Button
                 sx={{ my: 2, color: "white", display: "block" }}
-                onClick={() => dispatch(showAll(getAllTasks))}
+                onClick={() => dispatch(showAll())}
               >
                 Show All
               </Button>
             )}
             <Button
               sx={{ my: 2, color: "white", display: "block" }}
-              onClick={() => dispatch(deleteAllDoneTasks(getAllTasks))}
+              onClick={() => dispatch(deleteAllDoneTasks(tasksToShow, mutate))}
             >
               Delete All Done Tasks
             </Button>
