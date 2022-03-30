@@ -101,7 +101,6 @@ const MainMenu = ({ tasksToShow, mutate }) => {
                 </Typography>
               </MenuItem>
             </Menu>
-            {console.log(doSortAZ)}
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {doShowALL ? (
@@ -124,6 +123,12 @@ const MainMenu = ({ tasksToShow, mutate }) => {
               onClick={() => dispatch(deleteAllDoneTasks(tasksToShow, mutate))}
             >
               Delete All Done Tasks
+            </Button>
+            <Button
+              sx={{ my: 2, color: "white", display: "block" }}
+              onClick={() => dispatch(toggleSortAZ(doSortAZ))}
+            >
+              {doSortAZ ? "stop sort" : "sort AZ"}
             </Button>
           </Box>
 

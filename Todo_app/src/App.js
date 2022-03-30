@@ -25,7 +25,6 @@ const App = () => {
     mutate,
   } = useSWR(configService.todo_api + `?${optionAxios}`, fetcher);
 
-  console.log(optionAxios);
   const changeTaskName = (e) => {
     setTaskName(e.target.value);
   };
