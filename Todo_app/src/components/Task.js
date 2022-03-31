@@ -3,7 +3,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useState } from "react";
 import axios from "axios";
 import configService from "./config";
-import { useSelector } from "react-redux";
 import produce from "immer";
 
 const Task = ({ task, tasksToShow, mutate }) => {
