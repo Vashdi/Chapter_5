@@ -1,4 +1,4 @@
-const mongooseConnection = () => {
+const mongooseConnection = async () => {
   const mongoose = require("mongoose");
   const MONGODB_URL =
     process.env.NODE_ENV === "test"

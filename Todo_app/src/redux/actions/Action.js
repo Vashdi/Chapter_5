@@ -32,17 +32,9 @@ const handleAdd = async (newTasksToShow, newTask) => {
   return newTasksToShow;
 };
 
-const handleDeleteAllDoneTasks = async (allTasks, newTasksToShow) => {
-  for (const task of allTasks) {
-    if (task.complete) {
-      try {
-        await axios.delete(configService.todo_api + task.id);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }
-  return newTasksToShow;
+const handleDeleteAllDoneTasks = async (newerAllTasks) => {
+  await axios.delete(configService.todo_api + "api/tasks");
+  return newerAllTasks;
 };
 
 export const addNewTask = (newTask, tasksToShow, mutate) => {
@@ -67,6 +59,6 @@ export const deleteAllDoneTasks = (allTasks, mutate) => {
       rollbackOnError: true,
     };
 
-    mutate(handleDeleteAllDoneTasks(allTasks, newerAllTasks), options);
+    mutate(handleDeleteAllDoneTasks(newerAllTasks), options);
   };
 };

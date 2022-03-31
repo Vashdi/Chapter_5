@@ -31,10 +31,15 @@ const deleteByID = async (id) => {
   await TaskModel.findByIdAndRemove(id);
 };
 
+const handleDeleteDoneTasks = async () => {
+  await TaskModel.deleteMany({ complete: true });
+};
+
 module.exports = {
   getAllTasks,
   updateTaskName,
   updateTaskComplete,
   addNewTaskToDB,
   deleteByID,
+  handleDeleteDoneTasks,
 };

@@ -5,6 +5,7 @@ const {
   updateTaskComplete,
   addNewTaskToDB,
   deleteByID,
+  handleDeleteDoneTasks,
 } = require("../mongoDB/DBFunctions/dbFunctions");
 const taskRouter = express.Router();
 
@@ -54,6 +55,10 @@ taskRouter.delete("/:id", async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+taskRouter.delete("/api/tasks", async (req, res) => {
+  handleDeleteDoneTasks();
 });
 
 module.exports = taskRouter;
