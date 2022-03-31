@@ -28,9 +28,7 @@ export const showAll = () => {
 };
 
 const handleAdd = async (newTasksToShow, newTask) => {
-  let res = await axios.post(configService.addTask_api, {
-    task: newTask,
-  });
+  await axios.post(configService.addTask_api, { task: newTask });
   return newTasksToShow;
 };
 
