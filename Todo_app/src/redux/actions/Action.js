@@ -9,7 +9,7 @@ export const toggleShow = (doShowAll) => {
   };
 };
 
-export const toggleSortAZ = (doSortAZ, allTasks, mutate) => {
+export const toggleSortAZ = (doSortAZ) => {
   return async (dispatch) => {
     dispatch({ type: SORT_AZ, payload: !doSortAZ });
   };
