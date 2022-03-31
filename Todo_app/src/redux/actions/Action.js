@@ -58,10 +58,6 @@ export const addNewTask = (newTask, tasksToShow, mutate) => {
   };
 };
 
-export const deleteTheTask = (id) => async () => {
-  await axios.delete(configService.todo_api + id);
-};
-
 export const deleteAllDoneTasks = (allTasks, mutate) => {
   return async () => {
     let newerAllTasks = allTasks.filter((task) => task.complete !== true);

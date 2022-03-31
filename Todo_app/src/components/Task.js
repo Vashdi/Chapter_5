@@ -9,7 +9,6 @@ import produce from "immer";
 const Task = ({ task, tasksToShow, mutate }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [newTaskName, setNewTaskName] = useState(task.name);
-  const doShowALL = useSelector((state) => state.doShowALL);
 
   const updateFn = async (newTasksToShow) => {
     await axios.delete(configService.todo_api + task.id);
