@@ -8,7 +8,6 @@ import axios from "axios";
 import configService from "./components/config.js";
 
 const fetcher = async (url) => {
-  console.log("JEY");
   return await axios.get(url).then((res) => res.data);
 };
 
