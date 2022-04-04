@@ -6,7 +6,7 @@ const TaskModel = require("./mongoDB/Schemas/TaskSchema.js");
 const initialTasks = [
   {
     name: "Nir",
-    complete: true,
+    complete: false,
   },
   {
     name: "Vashdi",
@@ -32,6 +32,7 @@ describe("Tasks Tests", () => {
 
   test("there are two tasks", async () => {
     const response = await api.get("/");
+    console.log(response);
     expect(response.body).toHaveLength(2);
   });
 
@@ -62,14 +63,23 @@ describe("Tasks Tests", () => {
     expect(response.body).toHaveLength(1);
     expect(names).toContain("Vashdi");
   });
+});
 
+describe("test complete filter", () => {
   test("toggle complete", async () => {
     let task = await TaskModel.findOne({ name: "Nir" });
-    console.log(task);
     await api.put(`/updateComplete/${task._id}`).send({ complete: false });
-    const response = await api.get("/");
+    const response = await api.get("/?doShowAll=true");
     const nirTask = response.body.find((tasks) => tasks.name === "Nir");
-    console.log(nirTask);
     expect(nirTask.complete).toEqual(false);
+  });
+
+  test("show only true", async () => {
+    let task = await TaskModel.findOne({ name: "Nir" });
+    await api.put(`/updateComplete/${task._id}`).send({ complete: true });
+    const response = await api.get("/?doShowAll=false");
+    expect(response.body).toHaveLength(1);
+    const names = response.body.map((task) => task.name);
+    expect(names).toContain("Vashdi");
   });
 });

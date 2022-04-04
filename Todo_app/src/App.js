@@ -31,10 +31,7 @@ const App = () => {
 
   const addTaskKey = (event) => {
     if (event.keyCode === 13) {
-      dispatch(
-        addNewTask({ name: taskName, complete: false }, tasksToShow, mutate)
-      );
-      setTaskName("");
+      addTask();
     }
   };
 

@@ -11,12 +11,12 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import {
-  showAll,
-  hideAllDoneTasksAction,
   toggleSortAZ,
+  hideOrShowAlldoneTasksAction,
 } from "../redux/actions/Action.js";
 import { deleteAllDoneTasks } from "../redux/actions/Action.js";
 import { useDispatch, useSelector } from "react-redux";
+import "./MainMenu.css";
 
 const MainMenu = ({ tasksToShow, mutate }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -66,21 +66,14 @@ const MainMenu = ({ tasksToShow, mutate }) => {
               }}
             >
               <MenuItem>
-                {doShowALL ? (
-                  <Typography
-                    textAlign="center"
-                    onClick={() => dispatch(hideAllDoneTasksAction())}
-                  >
-                    Hide All Done Tasks
-                  </Typography>
-                ) : (
-                  <Typography
-                    textAlign="center"
-                    onClick={() => dispatch(showAll())}
-                  >
-                    Show All
-                  </Typography>
-                )}
+                <Typography
+                  textAlign="center"
+                  onClick={() =>
+                    dispatch(hideOrShowAlldoneTasksAction(doShowALL))
+                  }
+                >
+                  {doShowALL ? "Hide All Done Tasks" : "showAll"}
+                </Typography>
               </MenuItem>
               <MenuItem>
                 <Typography
@@ -103,21 +96,12 @@ const MainMenu = ({ tasksToShow, mutate }) => {
             </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {doShowALL ? (
-              <Button
-                sx={{ my: 2, color: "white", display: "block" }}
-                onClick={() => dispatch(hideAllDoneTasksAction())}
-              >
-                Hide All Done Tasks
-              </Button>
-            ) : (
-              <Button
-                sx={{ my: 2, color: "white", display: "block" }}
-                onClick={() => dispatch(showAll())}
-              >
-                Show All
-              </Button>
-            )}
+            <Button
+              sx={{ my: 2, color: "white", display: "block" }}
+              onClick={() => dispatch(hideOrShowAlldoneTasksAction(doShowALL))}
+            >
+              {doShowALL ? "Hide All Done Tasks" : "show all"}
+            </Button>
             <Button
               sx={{ my: 2, color: "white", display: "block" }}
               onClick={() => dispatch(deleteAllDoneTasks(tasksToShow, mutate))}

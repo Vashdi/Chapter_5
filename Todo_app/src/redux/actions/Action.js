@@ -15,15 +15,9 @@ export const toggleSortAZ = (doSortAZ) => {
   };
 };
 
-export const hideAllDoneTasksAction = () => {
+export const hideOrShowAlldoneTasksAction = (doShowALL) => {
   return async (dispatch) => {
-    dispatch(toggleShow(false));
-  };
-};
-
-export const showAll = () => {
-  return async (dispatch) => {
-    dispatch(toggleShow(true));
+    dispatch(toggleShow(!doShowALL));
   };
 };
 

@@ -1,10 +1,7 @@
 const mongooseConnection = async () => {
   const mongoose = require("mongoose");
-  const MONGODB_URL =
-    process.env.NODE_ENV === "test"
-      ? process.env.TEST_MONGODB_URI
-      : process.env.MONGODB_URL;
 
+  const MONGODB_URL = process.env[process.env.MONGO_PATH];
   mongoose.connect(MONGODB_URL);
 };
 
