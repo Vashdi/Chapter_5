@@ -1,23 +1,29 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewTask } from "./redux/actions/Action.js";
 import Task from "./components/Task";
 import MainMenu from "./components/MainMenu.js";
+import useSWR from "swr";
+import axios from "axios";
+import configService from "./components/config.js";
+
+const fetcher = async (url) => {
+  return await axios.get(url).then((res) => res.data);
+};
 
 const App = () => {
-  let dispatch = useDispatch();
-  let allTasks = useSelector((state) => state.allTasks);
-  let taskId = useSelector((state) => state.ID);
+  const dispatch = useDispatch();
   const [taskName, setTaskName] = useState("");
-  const [tasksToShow, setTasksToShow] = useState(allTasks);
+  const doShowALL = useSelector((state) => state.doShowALL);
+  const doSortAZ = useSelector((state) => state.doSortAZ);
 
-  useEffect(() => {
-    setTasksToShow(allTasks);
-  }, [allTasks]);
+  const optionAxios = `doShowAll=${doShowALL}&doSortAZ=${doSortAZ}`;
 
-  useEffect(() => {
-    console.log(allTasks);
-  }, [allTasks]);
+  const {
+    data: tasksToShow,
+    error,
+    mutate,
+  } = useSWR(configService.todo_api + `?${optionAxios}`, fetcher);
 
   const changeTaskName = (e) => {
     setTaskName(e.target.value);
@@ -25,13 +31,15 @@ const App = () => {
 
   const addTaskKey = (event) => {
     if (event.keyCode === 13) {
-      dispatch(addNewTask({ id: taskId, name: taskName, complete: false }));
+      dispatch(
+        addNewTask({ name: taskName, complete: false }, tasksToShow, mutate)
+      );
       setTaskName("");
     }
   };
 
   const addTask = () => {
-    dispatch(addNewTask({ id: taskId, name: taskName, complete: false }));
+    dispatch(addNewTask({ name: taskName }, tasksToShow, mutate));
     setTaskName("");
   };
 
@@ -44,9 +52,7 @@ const App = () => {
         flexDirection: "column",
       }}
     >
-      <MainMenu
-        setNewTasksToShow={(newTasksToShow) => setTasksToShow(newTasksToShow)}
-      />
+      <MainMenu tasksToShow={tasksToShow} mutate={mutate} />
       <h1>My To Do List</h1>
       <div style={{ textAlign: "center" }}>
         <div>
@@ -66,9 +72,17 @@ const App = () => {
           />
         </div>
         <div>
-          {tasksToShow.map((task, index) => {
-            return <Task key={index} task={task} />;
-          })}
+          {tasksToShow &&
+            tasksToShow.map((task, index) => {
+              return (
+                <Task
+                  key={index}
+                  task={task}
+                  tasksToShow={tasksToShow}
+                  mutate={mutate}
+                />
+              );
+            })}
         </div>
       </div>
     </div>

@@ -1,5 +1,2 @@
-export const ADD_TASK = "ADD_TASK";
-export const DELETE_TASK = "DELETE_TASK";
-export const GENERATE_NEW_ID = "GENERATE_NEW_ID";
-export const TOGGLE_COMPLETE = "TOGGLE_COMPLETE";
-export const DELETE_ALL_DONE_TASKS = "DELETE_ALL_DONE_TASKS";
+export const TOGGLE_SHOW = "TOGGLE_SHOW";
+export const SORT_AZ = "SORT_AZ";

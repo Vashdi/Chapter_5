@@ -2,35 +2,21 @@ import * as Types from "../types/types";
 
 const initialState = {
   ID: 0,
-  allTasks: [],
+  doShowALL: true,
+  doSortAZ: false,
 };
 
 const TaskReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.GENERATE_NEW_ID:
+    case Types.TOGGLE_SHOW:
       return {
         ...state,
-        ID: state.ID + 1,
+        doShowALL: action.payload,
       };
-    case Types.ADD_TASK:
+    case Types.SORT_AZ:
       return {
         ...state,
-        allTasks: [...state.allTasks, action.payload],
-      };
-    case Types.DELETE_TASK:
-      return {
-        ...state,
-        allTasks: action.payload,
-      };
-    case Types.TOGGLE_COMPLETE:
-      return {
-        ...state,
-        allTasks: action.payload,
-      };
-    case Types.DELETE_ALL_DONE_TASKS:
-      return {
-        ...state,
-        allTasks: action.payload,
+        doSortAZ: action.payload,
       };
     default:
       return state;

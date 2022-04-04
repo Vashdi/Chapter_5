@@ -1,29 +1,64 @@
-import {
-  ADD_TASK,
-  DELETE_TASK,
-  GENERATE_NEW_ID,
-  TOGGLE_COMPLETE,
-  DELETE_ALL_DONE_TASKS,
-} from "../types/types";
+import axios from "axios";
+import { SORT_AZ, TOGGLE_SHOW } from "../types/types";
+import configService from "../../components/config.js";
+import update from "immutability-helper";
 
-export const addNewTask = (newTask) => (dispatch) => {
-  dispatch({ type: ADD_TASK, payload: newTask });
-  dispatch({ type: GENERATE_NEW_ID });
+export const toggleShow = (doShowAll) => {
+  return async (dispatch) => {
+    dispatch({ type: TOGGLE_SHOW, payload: doShowAll });
+  };
 };
 
-export const toggleComplete = (id, allTasks) => (dispatch) => {
-  let newAllTasks = [...allTasks];
-  let index = newAllTasks.findIndex((task) => task.id === id);
-  newAllTasks[index].complete = !newAllTasks[index].complete;
-  dispatch({ type: TOGGLE_COMPLETE, payload: newAllTasks });
+export const toggleSortAZ = (doSortAZ) => {
+  return async (dispatch) => {
+    dispatch({ type: SORT_AZ, payload: !doSortAZ });
+  };
 };
 
-export const deleteTheTask = (id, allTasks) => (dispatch) => {
-  let newAllTasks = allTasks.filter((task) => task.id !== id);
-  dispatch({ type: DELETE_TASK, payload: newAllTasks });
+export const hideAllDoneTasksAction = () => {
+  return async (dispatch) => {
+    dispatch(toggleShow(false));
+  };
 };
 
-export const deleteAllDoneTasks = (allTasks) => (dispatch) => {
-  let newAllTasks = allTasks.filter((task) => task.complete !== true);
-  dispatch({ type: DELETE_ALL_DONE_TASKS, payload: newAllTasks });
+export const showAll = () => {
+  return async (dispatch) => {
+    dispatch(toggleShow(true));
+  };
+};
+
+const handleAdd = async (newTasksToShow, newTask) => {
+  await axios.post(configService.addTask_api, { task: newTask });
+  return newTasksToShow;
+};
+
+const handleDeleteAllDoneTasks = async (newerAllTasks) => {
+  await axios.delete(configService.todo_api + "api/tasks");
+  return newerAllTasks;
+};
+
+export const addNewTask = (newTask, tasksToShow, mutate) => {
+  return async () => {
+    const newTasksToShow = update(tasksToShow, { $push: [newTask] });
+
+    const options = {
+      optimisticData: newTasksToShow,
+      rollbackOnError: true,
+    };
+
+    mutate(handleAdd(newTasksToShow, newTask), options);
+  };
+};
+
+export const deleteAllDoneTasks = (allTasks, mutate) => {
+  return async () => {
+    let newerAllTasks = allTasks.filter((task) => task.complete !== true);
+
+    const options = {
+      optimisticData: newerAllTasks,
+      rollbackOnError: true,
+    };
+
+    mutate(handleDeleteAllDoneTasks(newerAllTasks), options);
+  };
 };

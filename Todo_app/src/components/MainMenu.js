@@ -10,14 +10,19 @@ import Container from "@mui/material/Container";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import { showAll, hideAllDoneTasks } from "../utils/helpers";
+import {
+  showAll,
+  hideAllDoneTasksAction,
+  toggleSortAZ,
+} from "../redux/actions/Action.js";
 import { deleteAllDoneTasks } from "../redux/actions/Action.js";
 import { useDispatch, useSelector } from "react-redux";
 
-const MainMenu = ({ setNewTasksToShow }) => {
+const MainMenu = ({ tasksToShow, mutate }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const dispatch = useDispatch();
-  const allTasks = useSelector((state) => state.allTasks);
+  const doShowALL = useSelector((state) => state.doShowALL);
+  const doSortAZ = useSelector((state) => state.doSortAZ);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -61,51 +66,74 @@ const MainMenu = ({ setNewTasksToShow }) => {
               }}
             >
               <MenuItem>
-                <Typography
-                  textAlign="center"
-                  onClick={() => hideAllDoneTasks(allTasks, setNewTasksToShow)}
-                >
-                  Hide All Done Tasks
-                </Typography>
+                {doShowALL ? (
+                  <Typography
+                    textAlign="center"
+                    onClick={() => dispatch(hideAllDoneTasksAction())}
+                  >
+                    Hide All Done Tasks
+                  </Typography>
+                ) : (
+                  <Typography
+                    textAlign="center"
+                    onClick={() => dispatch(showAll())}
+                  >
+                    Show All
+                  </Typography>
+                )}
               </MenuItem>
               <MenuItem>
                 <Typography
                   textAlign="center"
-                  onClick={() => dispatch(deleteAllDoneTasks(allTasks))}
+                  onClick={() =>
+                    dispatch(deleteAllDoneTasks(tasksToShow, mutate))
+                  }
                 >
                   Delete All Done Tasks
                 </Typography>
               </MenuItem>
               <MenuItem>
-                <Typography textAlign="center" onClick={() => showAll()}>
-                  Show All
+                <Typography
+                  textAlign="center"
+                  onClick={() => dispatch(toggleSortAZ(doSortAZ))}
+                >
+                  {doSortAZ ? "stop sort" : "sort AZ"}
                 </Typography>
               </MenuItem>
             </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            {doShowALL ? (
+              <Button
+                sx={{ my: 2, color: "white", display: "block" }}
+                onClick={() => dispatch(hideAllDoneTasksAction())}
+              >
+                Hide All Done Tasks
+              </Button>
+            ) : (
+              <Button
+                sx={{ my: 2, color: "white", display: "block" }}
+                onClick={() => dispatch(showAll())}
+              >
+                Show All
+              </Button>
+            )}
             <Button
               sx={{ my: 2, color: "white", display: "block" }}
-              onClick={() => hideAllDoneTasks(allTasks, setNewTasksToShow)}
-            >
-              Hide All Done Tasks
-            </Button>
-            <Button
-              sx={{ my: 2, color: "white", display: "block" }}
-              onClick={() => dispatch(deleteAllDoneTasks(allTasks))}
+              onClick={() => dispatch(deleteAllDoneTasks(tasksToShow, mutate))}
             >
               Delete All Done Tasks
             </Button>
             <Button
               sx={{ my: 2, color: "white", display: "block" }}
-              onClick={() => showAll(allTasks, setNewTasksToShow)}
+              onClick={() => dispatch(toggleSortAZ(doSortAZ))}
             >
-              Show All
+              {doSortAZ ? "stop sort" : "sort AZ"}
             </Button>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <IconButton sx={{ p: 0 }}>
+            <IconButton disabled sx={{ p: 0 }}>
               <AssignmentIcon fontSize="medium" sx={{ color: "white" }} />
             </IconButton>
           </Box>
