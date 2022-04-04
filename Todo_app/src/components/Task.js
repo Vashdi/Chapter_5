@@ -10,19 +10,22 @@ const Task = ({ task, tasksToShow, mutate }) => {
   const [newTaskName, setNewTaskName] = useState(task.name);
 
   const updateFn = async (newTasksToShow) => {
-    await axios.delete(configService.todo_api + task.id);
+    await axios.delete(configService.todo_api + task._id);
     return newTasksToShow;
   };
 
   const updateName = async (filteredTodos) => {
-    const resUpdatedTask = await axios.put(configService.update_api + task.id, {
-      name: newTaskName,
-    });
+    const resUpdatedTask = await axios.put(
+      configService.update_api + task._id,
+      {
+        name: newTaskName,
+      }
+    );
     return filteredTodos;
   };
 
   const updateCheck = async (newTasks) => {
-    const res = await axios.put(configService.update_complete_api + task.id, {
+    const res = await axios.put(configService.update_complete_api + task._id, {
       complete: !task.complete,
     });
     return newTasks;
@@ -30,7 +33,9 @@ const Task = ({ task, tasksToShow, mutate }) => {
 
   const handleCheck = async () => {
     const newTasksToShow = produce(tasksToShow, (draftState) => {
-      const index = tasksToShow.findIndex((oldTask) => oldTask.id === task.id);
+      const index = tasksToShow.findIndex(
+        (oldTask) => oldTask._id === task._id
+      );
       draftState[index].complete = !tasksToShow[index].complete;
     });
     const options = {
@@ -42,7 +47,7 @@ const Task = ({ task, tasksToShow, mutate }) => {
 
   const deleteTask = async (tasksToShow) => {
     const newTasksToShow = tasksToShow.filter(
-      (taskToCheck) => taskToCheck.id !== task.id
+      (taskToCheck) => taskToCheck._id !== task._id
     );
 
     const options = {
@@ -66,7 +71,7 @@ const Task = ({ task, tasksToShow, mutate }) => {
       setIsEdit(!isEdit);
       const newTasksToShow = produce(tasksToShow, (draftState) => {
         const index = tasksToShow.findIndex(
-          (oldTask) => oldTask.id === task.id
+          (oldTask) => oldTask._id === task._id
         );
         draftState[index].name = newTaskName;
       });
@@ -92,7 +97,7 @@ const Task = ({ task, tasksToShow, mutate }) => {
         task.name
       )}
       <input
-        id={task.id}
+        id={task._id}
         type="checkbox"
         style={{
           cursor: "pointer",

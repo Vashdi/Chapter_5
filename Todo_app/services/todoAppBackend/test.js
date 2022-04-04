@@ -56,7 +56,7 @@ describe("Tasks Tests", () => {
 
   test("delete task", async () => {
     let task = await TaskModel.findOne({ name: "Nir" });
-    await api.delete(`/${task.id}`);
+    await api.delete(`/${task._id}`);
     const response = await api.get("/");
     const names = response.body.map((tasks) => tasks.name);
     expect(response.body).toHaveLength(1);
@@ -66,7 +66,7 @@ describe("Tasks Tests", () => {
   test("toggle complete", async () => {
     let task = await TaskModel.findOne({ name: "Nir" });
     console.log(task);
-    await api.put(`/updateComplete/${task.id}`).send({ complete: false });
+    await api.put(`/updateComplete/${task._id}`).send({ complete: false });
     const response = await api.get("/");
     const nirTask = response.body.find((tasks) => tasks.name === "Nir");
     console.log(nirTask);

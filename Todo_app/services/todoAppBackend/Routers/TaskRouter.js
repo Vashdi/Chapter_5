@@ -42,9 +42,8 @@ taskRouter.put("/updateComplete/:id", async (req, res) => {
 
 taskRouter.post("/tasks", async (req, res) => {
   const dataOfTask = req.body.task;
-  console.log(req.body);
-  let task = await addNewTaskToDB(dataOfTask);
-  res.send(task);
+  await addNewTaskToDB(dataOfTask);
+  res.sendStatus(200);
 });
 
 taskRouter.delete("/:id", async (req, res) => {
@@ -53,7 +52,7 @@ taskRouter.delete("/:id", async (req, res) => {
     await deleteByID(id);
     res.sendStatus(204);
   } catch (error) {
-    console.log(error);
+    res.sendStatus(404);
   }
 });
 
